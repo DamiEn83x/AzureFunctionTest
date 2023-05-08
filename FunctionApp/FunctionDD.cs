@@ -13,7 +13,7 @@ namespace FunctionApp
     public static class FunctionDDClass
     {
         [FunctionName("FunctionDD")]
-        public static async Task<IActionResult> Run(
+        public static async Task<IActionResult> RunFunctionDD(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
@@ -28,6 +28,26 @@ namespace FunctionApp
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello my dear dear, {name}. This HTTP triggered function executed successfully.";
+
+            return new OkObjectResult(responseMessage);
+        }
+
+        [FunctionName("FunctionDD2")]
+        public static async Task<IActionResult> RunFunctionDD2(
+       [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+       ILogger log)
+        {
+            log.LogInformation("C# HTTP trigger function processed a request.");
+
+            string name = req.Query["name"];
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            name = name ?? data?.name;
+
+            string responseMessage = string.IsNullOrEmpty(name)
+                ? "DD2 This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                : $"DD2 Hello my dear dear, {name}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult(responseMessage);
         }
